@@ -1,11 +1,18 @@
+
 name: CI - Tests et SonarQube
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: read
@@ -30,7 +37,9 @@ jobs:
 
       # 3. Installation des dépendances
       - name: Install dependencies
-        run: pip install --only-binary :all: -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install --only-binary :all: -r requirements.txt
 
       # 4. Tests et couverture
       - name: Run tests with coverage
@@ -43,9 +52,6 @@ jobs:
 
       # 5. Analyse SonarQube
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.3.0
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-
-
